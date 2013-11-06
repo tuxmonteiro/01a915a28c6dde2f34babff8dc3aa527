@@ -1,0 +1,12 @@
+[submodule "play_lab/puppet/modules/play"]
+	path = play_lab/puppet/modules/play
+	url = git@github.com:cescoffier/puppet-play.git
+[submodule "play_lab/puppet/modules/wget"]
+	path = play_lab/puppet/modules/wget
+	url = git@github.com:EslamElHusseiny/puppet-wget.git
+[submodule "puppet-biemond-modules"]
+	path = puppet-biemond-modules
+	url = git@github.com:biemond/puppet.git
+[submodule "rails-lab/puppet/modules/rvm"]
+	path = rails-lab/puppet/modules/rvm
+	url = git@github.com:tuxmonteiro/puppet-rvm.git
