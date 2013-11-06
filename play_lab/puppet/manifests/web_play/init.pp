@@ -1,3 +1,10 @@
+stage {'req-install':
+    before => Stage['main'],
+}
+class { 'pre_install_play':
+    stage => 'req-install',
+}
+
 class pre_install_play {
 
     exec {'update-apt':
@@ -16,7 +23,7 @@ class pre_install_play {
 class {'play':
     version => "2.2.1",
     user    => 'vagrant',
-    require => [ Jdk7::Install7['jdk1.7.0_45'], Class['pre_install_play'], ]
+    require => Jdk7::Install7['jdk1.7.0_45'],
 }
 
 include jdk7
