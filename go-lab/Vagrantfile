@@ -7,9 +7,10 @@ Vagrant.configure("2") do |config|
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box_url = "../precise-server-cloudimg-vagrant-amd64-disk1.box"
+  config.vm.box_url = "../precise-server-cloudimg-amd64-vagrant-disk1.box"
   #config.ssh.private_key_path = "/Users/m.monteiro/.ssh/id_rsa"
   config.vm.synced_folder "/Users/m.monteiro/Documents/dev/export", "/vagrant", :nfs => true
+  config.vm.synced_folder "/Users/m.monteiro", "/external", :nfs => true
 
   config.vm.provider "virtualbox" do |v|
     #v.customize ['storageattach', :id,'--storagectl', 'SATA', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', './projetos.vdi']
