@@ -1,0 +1,86 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  # All Vagrant configuration is done here. The most common configuration
+  # options are documented and commented below. For a complete reference,
+  # please see the online documentation at vagrantup.com.
+
+  # Every Vagrant virtual environment requires a box to build off of.
+  config.vm.box_url = "../precise-server-cloudimg-amd64-vagrant-disk1.box"
+  #config.ssh.private_key_path = "/Users/m.monteiro/.ssh/id_rsa"
+  config.vm.synced_folder "/Users/m.monteiro/Documents/dev/export", "/vagrant"
+  config.vm.synced_folder "puppet/templates", "/tmp/vagrant-puppet/templates"
+  config.vm.synced_folder "jdk", "/tmp/jdk"
+
+  config.vm.provider "virtualbox" do |v|
+    #v.customize ['storageattach', :id,'--storagectl', 'SATA', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', './projetos.vdi']
+    v.customize ["modifyvm", :id, "--memory", "512"]
+  end
+
+  config.vm.define :fe do |fe|
+    fe.vm.box = "fe"
+    fe.vm.hostname = "fe.localhost"
+    fe.vm.network :private_network, ip: "192.168.222.7"
+    fe.vm.network :forwarded_port, guest: 80, host: 8080
+    fe.vm.provision :puppet do |puppet|
+      puppet.manifests_path = "puppet/manifests/fe"
+      puppet.module_path    = "puppet/modules"
+      puppet.options        = ["--templatedir", "/tmp/vagrant-puppet/templates/fe"]
+      puppet.manifest_file  = "init.pp"
+    end
+  end
+
+  config.vm.define :be1 do |be1|
+    be1.vm.box = "be1"
+    be1.vm.hostname = "be1.localhost"
+    be1.vm.network :private_network, ip: "192.168.222.8"
+    be1.vm.network :forwarded_port, guest: 80, host: 8081
+    be1.vm.provision :puppet do |puppet|
+      puppet.manifests_path = "puppet/manifests/be1"
+      puppet.module_path    = "puppet/modules"
+      puppet.options        = ["--templatedir", "/tmp/vagrant-puppet/templates/be1"]
+      puppet.manifest_file  = "init.pp"
+    end
+  end
+
+ config.vm.define :be2 do |be2|
+    be2.vm.box = "be2"
+    be2.vm.hostname = "be2.localhost"
+    be2.vm.network :private_network, ip: "192.168.222.9"
+    be2.vm.network :forwarded_port, guest: 80, host: 8082
+    be2.vm.provision :puppet do |puppet|
+      puppet.manifests_path = "puppet/manifests/be2"
+      puppet.module_path    = "puppet/modules"
+      puppet.options        = ["--templatedir", "/tmp/vagrant-puppet/templates/be2"]
+      puppet.manifest_file  = "init.pp"
+    end
+  end
+
+  config.vm.define :queue do |queue|
+    queue.vm.box = "queue"
+    queue.vm.hostname = "queue.localhost"
+    queue.vm.network :private_network, ip: "192.168.222.10"
+    queue.vm.network :forwarded_port, guest: 3000, host: 3000
+    queue.vm.provision :puppet do |puppet|
+      puppet.manifests_path = "puppet/manifests/queue"
+      puppet.module_path    = "puppet/modules"
+      puppet.options        = ["--templatedir", "/tmp/vagrant-puppet/templates/queue"]
+      puppet.manifest_file  = "init.pp"
+    end
+  end
+
+  config.vm.define :db do |db|
+    db.vm.box = "db"
+    db.vm.hostname = "db.localhost"
+    db.vm.network :private_network, ip: "192.168.222.11"
+    db.vm.network :forwarded_port, guest: 80, host: 8083
+    db.vm.provision :puppet do |puppet|
+      puppet.manifests_path = "puppet/manifests/db"
+      puppet.module_path    = "puppet/modules"
+      puppet.options        = ["--templatedir", "/tmp/vagrant-puppet/templates/db"]
+      puppet.manifest_file  = "init.pp"
+    end
+  end
+
+end
